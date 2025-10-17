@@ -1,47 +1,11 @@
 import { useEffect, useState } from "react";
-import {
-	fetchHlTrades,
-	fetchLighterTrades,
-	fetchMarketFundings,
-} from "../api/positions";
-import { useParams } from "react-router-dom";
+import useFetchMarketFundings from "../hooks/useFetchMarketFundings";
 
 export function PlatformTable({ title }: { title: string }) {
-	const params = useParams();
-	// console.log("checking params", params);
-	const [error, setError] = useState("");
-	const [address, setAddress] = useState("");
-	const formatTimestamp = (ts: number) => new Date(ts).toLocaleString();
-	const [totalPages, setTotalPages] = useState(1);
-	const [page, setPage] = useState(1);
-	type Trade = {
-		market: string;
-		side: string;
-		amount: number | string;
-		price: number | string;
-		fee: number | string;
-		buy_time: number;
-		// position_size?: number | string;
-	};
-
 	const [data, setData] = useState<any[]>([]);
 	const [tableData, setTableData] = useState<any[]>([]);
-	const [loading, setLoading] = useState(false);
-	const handleFetch = async () => {
-		setLoading(true);
-		setLoading(true);
-		try {
-			const [response] = await Promise.all([fetchMarketFundings()]);
-			setData(response.data || []);
+	const { data: marketData, isLoading } = useFetchMarketFundings();
 
-			setLoading(false);
-			// setTotalPages(Math.ceil((trades.data?.total || 0) / 10));
-		} catch (e: any) {
-			setError(e.message || "Error fetching positions");
-		} finally {
-			setLoading(false);
-		}
-	};
 	useEffect(() => {
 		if (data.length > 0) {
 			const marketMap: any = {};
@@ -61,32 +25,35 @@ export function PlatformTable({ title }: { title: string }) {
 					const lighter = marketMap[m].lighter;
 					const diff = hl - lighter;
 					const diffPercent = (diff / lighter) * 100;
+					const absDiffPercent = Math.abs(diff);
 					return {
 						market: m,
 						hl: hl.toFixed(4),
 						lighter: lighter.toFixed(4),
 						diff: diff.toFixed(4),
 						diffPercent: diffPercent.toFixed(2),
+						absDiff: absDiffPercent.toFixed(4),
 					};
-				});
+				})
+				.sort(
+					(a, b) => Math.abs(parseFloat(b.diff)) - Math.abs(parseFloat(a.diff))
+				);
 
 			setTableData(formatted);
 		}
 	}, [data]);
+
 	useEffect(() => {
-		if (params.address) {
-			setAddress(params.address);
+		if (marketData && !isLoading) {
+			setData(marketData.data || []);
 		}
-	}, [params.address]);
-	useEffect(() => {
-		handleFetch();
-	}, []);
+	}, [marketData]);
 	return (
 		<section className="mb-10">
 			<h2 className="text-xl font-semibold mt-10 mb-3 text-blue-400">
 				{title}
 			</h2>
-			{loading ? (
+			{isLoading ? (
 				<div className="flex items-center justify-center h-64">
 					<div className="flex flex-col items-center">
 						<svg
@@ -126,7 +93,9 @@ export function PlatformTable({ title }: { title: string }) {
 											<th className="px-4 py-3 font-medium">HL Funding</th>
 											<th className="px-4 py-3 font-medium">Lighter Funding</th>
 											<th className="px-4 py-3 font-medium">HL - Lighter</th>
-											{/* <th className="px-4 py-3 font-medium">HL - Lighter %</th> */}
+											<th className="px-4 py-3 font-medium">
+												Absolute Difference %
+											</th>
 										</tr>
 									</thead>
 									<tbody className="text-slate-200">
@@ -159,17 +128,17 @@ export function PlatformTable({ title }: { title: string }) {
 														{Number(f.diff).toFixed(5)}
 													</span>
 												</td>
-												{/* <td className="px-4 py-3 text-green-400">
+												<td className="px-4 py-3 text-green-400">
 													<span
 														className={
-															Number(f.diffPercent) >= 0
+															Number(f.absDiff) >= 0
 																? "text-green-400"
 																: "text-red-400"
 														}
 													>
-														{Number(f.diffPercent).toFixed(2)}%
+														{Number(f.absDiff)}
 													</span>
-												</td> */}
+												</td>
 											</tr>
 										))}
 									</tbody>
