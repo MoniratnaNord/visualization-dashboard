@@ -102,8 +102,16 @@ export default function FundingTable({
 												{f.side}
 											</span>
 										</td>
-										<td className="px-4 py-3 text-green-400">
-											{Number(f.amount).toFixed(5)}
+										<td className="px-4 py-3">
+											<span
+												className={
+													Number(f.amount) >= 0
+														? "text-green-400"
+														: "text-red-400"
+												}
+											>
+												{Number(f.amount).toFixed(5)}
+											</span>
 										</td>
 										<td className="px-4 py-3">
 											<span
