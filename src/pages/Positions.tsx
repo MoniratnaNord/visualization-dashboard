@@ -37,6 +37,7 @@ export default function Positions() {
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 	const [invalidAddress, setInvalidAddress] = useState(false);
+	const [fundingRate, setFundingRate] = useState([]);
 
 	const handleFetch = async () => {
 		setError(null);
@@ -57,6 +58,7 @@ export default function Positions() {
 				marketFees,
 				hlTradesData,
 				ltTradesData,
+				fundingRate,
 			] = await Promise.all([
 				fetchHyperliquidUserPositions(address),
 				fetchLighterUserPositions(address),
@@ -65,6 +67,7 @@ export default function Positions() {
 				fetchMarketFees(address),
 				fetchHlTrades(address, 1),
 				fetchLighterTrades(address, 1),
+				fetchLighterFundingRate(),
 			]);
 			setHlPositions(hl);
 			setLtPositions(lt);
@@ -75,6 +78,7 @@ export default function Positions() {
 			setHlTrades(hlTradesData.data || []);
 			setLtTrades(ltTradesData.data || []);
 			setPnlData(pnlData);
+			setFundingRate(fundingRate.funding_rates);
 		} catch (e: any) {
 			setError(e.message || "Error fetching positions");
 		} finally {
@@ -152,11 +156,11 @@ export default function Positions() {
 					}
 					const endTime = Date.now();
 					const startTime = endTime - 60 * 60 * 1000;
-					const rate = await fetchLighterFundingRate(
-						filterMarket[0].lighter.market_id,
-						startTime,
-						endTime
-					);
+					const rate = await fetchLighterFundingRate();
+					// filterMarket[0].lighter.market_id,
+					// startTime,
+					// endTime
+					console.log("lLL funding", rate.fundings);
 					setFundingRate(rate.fundings?.[0]?.rate || "N/A");
 				} catch {
 					setFundingRate("Error");
@@ -178,7 +182,16 @@ export default function Positions() {
 		{ id: "allFunding" as TabType, label: "All Funding", icon: DollarSign },
 		{ id: "trades" as TabType, label: "Trades", icon: TrendingUp },
 	];
-
+	const checkFundingrate = (symbol: string, exchange: string) => {
+		const filtered: any = fundingRate.filter(
+			(i: any) => i.symbol === symbol && i.exchange === exchange
+		);
+		if (filtered.length > 0) {
+			return Number(Number(filtered[0].rate / 8) * 100).toFixed(4);
+		} else {
+			return 0;
+		}
+	};
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -503,14 +516,13 @@ export default function Positions() {
 																	</span>
 																</td>
 																<td className="px-4 py-3">
-																	{p.position.liquidationPx}
+																	{Number(p.position.liquidationPx).toFixed(5)}
 																</td>
 																<td className="px-4 py-3">
-																	{Number(
-																		Number(
-																			fundingMap[p.position.coin.toLowerCase()]
-																		) * 100
-																	).toFixed(4)}
+																	{checkFundingrate(
+																		p.position.coin,
+																		"hyperliquid"
+																	)}
 																	%
 																</td>
 															</tr>
@@ -596,9 +608,12 @@ export default function Positions() {
 																	</span>
 																</td>
 																<td className="px-4 py-3">
-																	{p.liquidation_price}
+																	{Number(p.liquidation_price).toFixed(5)}
 																</td>
-																<LighterFundingRateCell symbol={p.symbol} />
+																<td className="px-4 py-3">
+																	{checkFundingrate(p.symbol, "lighter")} %
+																</td>
+																{/* <LighterFundingRateCell symbol={p.symbol} /> */}
 															</tr>
 														))}
 												</tbody>

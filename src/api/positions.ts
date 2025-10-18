@@ -66,16 +66,14 @@ export async function fetchLighterTrades(address: string, page: number) {
 	const data = await res.json();
 	return data;
 }
-export async function fetchLighterFundingRate(
-	market: number,
-	startTime: number,
-	endTime: number
-) {
-	const url = `https://mainnet.zklighter.elliot.ai/api/v1/fundings?market_id=${market}&resolution=1h&start_timestamp=${startTime}&end_timestamp=${endTime}&count_back=1`;
+export async function fetchLighterFundingRate() {
+	// const url = `https://mainnet.zklighter.elliot.ai/api/v1/fundings?market_id=${market}&resolution=1h&start_timestamp=${startTime}&end_timestamp=${endTime}&count_back=1`;
+	const url = `https://mainnet.zklighter.elliot.ai/api/v1/funding-rates`;
 	const res = await fetch(url);
 
 	if (!res.ok) throw new Error("Failed to fetch Lighter data");
 	const data = await res.json();
+	console.log("Lighter data", data);
 	return data;
 }
 export async function fetchPnl(address: string) {
