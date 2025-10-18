@@ -164,3 +164,13 @@ export async function fetchScoring(symbol: string) {
 	const data = await res.json();
 	return data;
 }
+export async function fetchTradeDetails(address: string) {
+	const url = `${
+		import.meta.env.VITE_API_URL
+	}/api/user/${address}/fetch-trade-details`;
+	const res = await fetch(url);
+
+	if (!res.ok) throw new Error("Failed to fetch Lighter data");
+	const data = await res.json();
+	return data;
+}

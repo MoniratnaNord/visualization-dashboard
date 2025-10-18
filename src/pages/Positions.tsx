@@ -17,6 +17,7 @@ import FundingTable from "../components/FundingTable";
 import { TradesTable } from "../components/TradesTable";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
+import useFetchTradeDetails from "../hooks/useFetchTradeDetails";
 
 type TabType = "positions" | "funding" | "summary" | "trades" | "allFunding";
 
@@ -192,6 +193,11 @@ export default function Positions() {
 			return 0;
 		}
 	};
+	const { data: tradeData, isLoading: tradeLoading } = useFetchTradeDetails(
+		address,
+		address !== ""
+	);
+	console.log("tradeData", tradeData?.data);
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -298,7 +304,7 @@ export default function Positions() {
 					<div className="space-y-6">
 						{activeTab === "summary" && (
 							<div className="space-y-6">
-								<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+								<div className="grid grid-cols-1 md:grid-cols-4 gap-6">
 									<div className="bg-gradient-to-br from-blue-500/20 to-purple-500/20 backdrop-blur-sm rounded-2xl border border-blue-500/30 p-6">
 										<div className="text-sm text-blue-300 mb-2">
 											Total Deposit
@@ -319,10 +325,18 @@ export default function Positions() {
 									</div>
 									<div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-2xl border border-purple-500/30 p-6">
 										<div className="text-sm text-purple-300 mb-2">
-											Total APR
+											Total Funding Earned
 										</div>
 										<div className="text-3xl font-bold text-white">
-											{Number(pnlData.data.total_apr).toFixed(2)}%
+											${Number(tradeData?.data.total_funding_earned).toFixed(2)}
+										</div>
+									</div>
+									<div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-2xl border border-purple-500/30 p-6">
+										<div className="text-sm text-purple-300 mb-2">
+											Total Fees Paid
+										</div>
+										<div className="text-3xl font-bold text-white">
+											${Number(tradeData?.data.total_fees_paid).toFixed(2)}
 										</div>
 									</div>
 								</div>
