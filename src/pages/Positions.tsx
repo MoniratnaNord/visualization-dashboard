@@ -307,13 +307,13 @@ export default function Positions() {
 								<div className="grid grid-cols-1 md:grid-cols-5 gap-6">
 									<div className="bg-gradient-to-br from-blue-500/20 to-purple-500/20 backdrop-blur-sm rounded-2xl border border-blue-500/30 p-6">
 										<div className="text-sm text-blue-300 mb-2">
-											Total Deposit
+											Current Balance
 										</div>
 										<div className="text-3xl font-bold text-white">
 											$
 											{Number(
-												Number(pnlData.data.hyperliquid.total_deposits) +
-													Number(pnlData.data.lighter.total_deposits)
+												Number(pnlData.data.hyperliquid.account_balance) +
+													Number(pnlData.data.lighter.account_balance)
 											).toFixed(2)}
 										</div>
 									</div>
