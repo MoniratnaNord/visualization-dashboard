@@ -119,17 +119,14 @@ export default function ChartPanel({
 		const formatTime = (t: number) => {
 			const d = new Date(t);
 			const spanDays = timeRange / (24 * 3600 * 1000);
-			if (spanDays > 180)
-				return `${d.toLocaleString("en-US", {
-					month: "short",
-				})} ${d.getUTCFullYear()}`;
+			if (spanDays > 180) return `${d.toString()}`;
 			if (spanDays > 7)
-				return `${String(d.getUTCDate()).padStart(2, "0")} ${d.toLocaleString(
-					"en-US",
-					{ month: "short" }
-				)} ${d.getUTCFullYear()}`;
-			return `${String(d.getUTCHours()).padStart(2, "0")}:${String(
-				d.getUTCMinutes()
+				return `${String(d.getDate()).padStart(
+					2,
+					"0"
+				)} ${d.toString()} ${d.getFullYear()}`;
+			return `${String(d.getHours()).padStart(2, "0")}:${String(
+				d.getMinutes()
 			).padStart(2, "0")} UTC`;
 		};
 
@@ -245,11 +242,11 @@ export default function ChartPanel({
 
 				// tooltip header time
 				const d = new Date(hoverTime);
-				const yyyy = d.getUTCFullYear();
-				const mm = String(d.getUTCMonth() + 1).padStart(2, "0");
-				const dd = String(d.getUTCDate()).padStart(2, "0");
-				const hh = String(d.getUTCHours()).padStart(2, "0");
-				const min = String(d.getUTCMinutes()).padStart(2, "0");
+				const yyyy = d.getFullYear();
+				const mm = String(d.getMonth() + 1).padStart(2, "0");
+				const dd = String(d.getDate()).padStart(2, "0");
+				const hh = String(d.getHours()).padStart(2, "0");
+				const min = String(d.getMinutes()).padStart(2, "0");
 				const header = `${yyyy}-${mm}-${dd} ${hh}:${min} UTC`;
 
 				const lines = [header, ...tooltipLines];
