@@ -33,11 +33,25 @@ export function TradesTable({
 		setLoading(true);
 		try {
 			if (platform === "hl") {
-				const [trades] = await Promise.all([fetchHlTrades(address, page)]);
+				const [trades] = await Promise.all([
+					fetchHlTrades(
+						address,
+						page,
+						address.toLowerCase() ===
+							"0xA2a95178FFED95ce9a2278bcA9bB5bef8C0DC95C".toLowerCase()
+					),
+				]);
 				setData(trades.data.hyperliquid_trades || []);
 				setTotalPages(trades.data?.pagination.total_pages);
 			} else {
-				const [trades] = await Promise.all([fetchLighterTrades(address, page)]);
+				const [trades] = await Promise.all([
+					fetchLighterTrades(
+						address,
+						page,
+						address.toLowerCase() ===
+							"0xA2a95178FFED95ce9a2278bcA9bB5bef8C0DC95C".toLowerCase()
+					),
+				]);
 				setData(trades.data.lighter_trades || []);
 				setTotalPages(trades.data?.pagination.total_pages);
 			}

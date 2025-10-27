@@ -64,10 +64,28 @@ export default function Positions() {
 				fetchHyperliquidUserPositions(address),
 				fetchLighterUserPositions(address),
 				fetchPnlData(address),
-				fetchTokenFundings(address),
-				fetchMarketFees(address),
-				fetchHlTrades(address, 1),
-				fetchLighterTrades(address, 1),
+				fetchTokenFundings(
+					address,
+					address.toLowerCase() ===
+						"0xA2a95178FFED95ce9a2278bcA9bB5bef8C0DC95C".toLowerCase()
+				),
+				fetchMarketFees(
+					address,
+					address.toLowerCase() ===
+						"0xA2a95178FFED95ce9a2278bcA9bB5bef8C0DC95C".toLowerCase()
+				),
+				fetchHlTrades(
+					address,
+					1,
+					address.toLowerCase() ===
+						"0xA2a95178FFED95ce9a2278bcA9bB5bef8C0DC95C".toLowerCase()
+				),
+				fetchLighterTrades(
+					address,
+					1,
+					address.toLowerCase() ===
+						"0xA2a95178FFED95ce9a2278bcA9bB5bef8C0DC95C".toLowerCase()
+				),
 				fetchLighterFundingRate(),
 			]);
 			setHlPositions(hl);

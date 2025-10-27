@@ -33,12 +33,24 @@ export default function FundingTable({
 		setLoading(true);
 		try {
 			if (platform === "hl") {
-				const [trades] = await Promise.all([fetchHlFundings(address, page)]);
+				const [trades] = await Promise.all([
+					fetchHlFundings(
+						address,
+						page,
+						address.toLowerCase() ===
+							"0xA2a95178FFED95ce9a2278bcA9bB5bef8C0DC95C".toLowerCase()
+					),
+				]);
 				setData(trades.data.hyperliquid_fundings || []);
 				setTotalPages(trades.data?.pagination.total_pages);
 			} else {
 				const [trades] = await Promise.all([
-					fetchLighterFundings(address, page),
+					fetchLighterFundings(
+						address,
+						page,
+						address.toLowerCase() ===
+							"0xA2a95178FFED95ce9a2278bcA9bB5bef8C0DC95C".toLowerCase()
+					),
 				]);
 				setData(trades.data.lighter_fundings || []);
 				setTotalPages(trades.data?.pagination.total_pages);

@@ -26,40 +26,72 @@ export async function fetchLighterUserPositions(address: string) {
 	return data.accounts[0].positions;
 }
 
-export async function fetchHlFundings(address: string, page: number) {
-	const url = `${
-		import.meta.env.VITE_API_URL
-	}/api/user/${address}/get-hl-fundings?page=${page}`;
+export async function fetchHlFundings(
+	address: string,
+	page: number,
+	isSpecific: boolean
+) {
+	const url = isSpecific
+		? `${
+				import.meta.env.VITE_API_URL
+		  }/api/user/${address}/get-hl-fundings?page=${page}&start_time=${"26/10/2025, 12:56:36 pm"}`
+		: `${
+				import.meta.env.VITE_API_URL
+		  }/api/user/${address}/get-hl-fundings?page=${page}`;
 	const res = await fetch(url);
 
 	if (!res.ok) throw new Error("Failed to fetch Lighter data");
 	const data = await res.json();
 	return data;
 }
-export async function fetchLighterFundings(address: string, page: number) {
-	const url = `${
-		import.meta.env.VITE_API_URL
-	}/api/user/${address}/get-lighter-fundings?page=${page}`;
+export async function fetchLighterFundings(
+	address: string,
+	page: number,
+	isSpecific: boolean
+) {
+	const url = isSpecific
+		? `${
+				import.meta.env.VITE_API_URL
+		  }/api/user/${address}/get-lighter-fundings?page=${page}&start_time=${"26/10/2025, 12:56:36 pm"}`
+		: `${
+				import.meta.env.VITE_API_URL
+		  }/api/user/${address}/get-lighter-fundings?page=${page}`;
 	const res = await fetch(url);
 
 	if (!res.ok) throw new Error("Failed to fetch Lighter data");
 	const data = await res.json();
 	return data;
 }
-export async function fetchHlTrades(address: string, page: number) {
-	const url = `${
-		import.meta.env.VITE_API_URL
-	}/api/user/${address}/get-hl-trades?page=${page}`;
+export async function fetchHlTrades(
+	address: string,
+	page: number,
+	isSpecific: boolean
+) {
+	const url = isSpecific
+		? `${
+				import.meta.env.VITE_API_URL
+		  }/api/user/${address}/get-hl-trades?page=${page}&start_time=${"26/10/2025, 12:56:36 pm"}`
+		: `${
+				import.meta.env.VITE_API_URL
+		  }/api/user/${address}/get-hl-trades?page=${page}`;
 	const res = await fetch(url);
 
 	if (!res.ok) throw new Error("Failed to fetch Lighter data");
 	const data = await res.json();
 	return data;
 }
-export async function fetchLighterTrades(address: string, page: number) {
-	const url = `${
-		import.meta.env.VITE_API_URL
-	}/api/user/${address}/get-lighter-trades?page=${page}`;
+export async function fetchLighterTrades(
+	address: string,
+	page: number,
+	isSpecific: boolean
+) {
+	const url = isSpecific
+		? `${
+				import.meta.env.VITE_API_URL
+		  }/api/user/${address}/get-lighter-trades?page=${page}&start_time=${"26/10/2025, 12:56:36 pm"}`
+		: `${
+				import.meta.env.VITE_API_URL
+		  }/api/user/${address}/get-lighter-trades?page=${page}`;
 	const res = await fetch(url);
 
 	if (!res.ok) throw new Error("Failed to fetch Lighter data");
@@ -95,20 +127,24 @@ export async function fetchPnlData(address: string) {
 	const data = await res.json();
 	return data;
 }
-export async function fetchTokenFundings(address: string) {
-	const url = `${
-		import.meta.env.VITE_API_URL
-	}/api/user/${address}/token-wise-fundings`;
+export async function fetchTokenFundings(address: string, isSpecific: boolean) {
+	const url = isSpecific
+		? `${
+				import.meta.env.VITE_API_URL
+		  }/api/user/${address}/token-wise-fundings?start_time=${"26/10/2025, 12:56:36 pm"}`
+		: `${import.meta.env.VITE_API_URL}/api/user/${address}/token-wise-fundings`;
 	const res = await fetch(url);
 
 	if (!res.ok) throw new Error("Failed to fetch Lighter data");
 	const data = await res.json();
 	return data;
 }
-export async function fetchMarketFees(address: string) {
-	const url = `${
-		import.meta.env.VITE_API_URL
-	}/api/user/${address}/market-wise-fees`;
+export async function fetchMarketFees(address: string, isSpecific: boolean) {
+	const url = isSpecific
+		? `${
+				import.meta.env.VITE_API_URL
+		  }/api/user/${address}/market-wise-fees?start_time=${"26/10/2025, 12:56:36 pm"}`
+		: `${import.meta.env.VITE_API_URL}/api/user/${address}/market-wise-fees`;
 	const res = await fetch(url);
 
 	if (!res.ok) throw new Error("Failed to fetch Lighter data");
@@ -164,10 +200,12 @@ export async function fetchScoring(symbol: string) {
 	const data = await res.json();
 	return data;
 }
-export async function fetchTradeDetails(address: string) {
-	const url = `${
-		import.meta.env.VITE_API_URL
-	}/api/user/${address}/fetch-trade-details`;
+export async function fetchTradeDetails(address: string, isSpecific: boolean) {
+	const url = isSpecific
+		? `${
+				import.meta.env.VITE_API_URL
+		  }/api/user/${address}/fetch-trade-details?start_time=${"26/10/2025, 12:56:36 pm"}`
+		: `${import.meta.env.VITE_API_URL}/api/user/${address}/fetch-trade-details`;
 	const res = await fetch(url);
 
 	if (!res.ok) throw new Error("Failed to fetch Lighter data");
