@@ -88,7 +88,7 @@ export async function fetchLighterTrades(
 	const url = isSpecific
 		? `${
 				import.meta.env.VITE_API_URL
-		  }/api/user/${address}/get-lighter-trades?page=${page}&start_time=${"26/10/2025, 12:56:36 pm"}`
+		  }/api/user/${address}/get-lighter-trades?page=${page}&start_time=${"26/10/2025, 12:56:32 pm"}`
 		: `${
 				import.meta.env.VITE_API_URL
 		  }/api/user/${address}/get-lighter-trades?page=${page}`;
