@@ -92,7 +92,7 @@ export default function FundingTable({
 									<th className="px-4 py-3 font-medium">Market</th>
 									<th className="px-4 py-3 font-medium">Side</th>
 									<th className="px-4 py-3 font-medium">Change</th>
-									<th className="px-4 py-3 font-medium">Funding Rate</th>
+									<th className="px-4 py-3 font-medium">Funding Rate (%)</th>
 									<th className="px-4 py-3 font-medium">Time (UTC)</th>
 								</tr>
 							</thead>
@@ -133,7 +133,7 @@ export default function FundingTable({
 														: "text-red-400"
 												}
 											>
-												{Number(f.funding_rate).toFixed(5)}
+												{Number(Number(f.funding_rate) * 100).toFixed(4)}
 											</span>
 										</td>
 										<td className="px-4 py-3 text-green-400">
