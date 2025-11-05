@@ -88,8 +88,8 @@ export function TradesTable({
 							<thead className="bg-slate-900/50 sticky top-0">
 								<tr className="bg-slate-900/50 text-left text-slate-400 text-sm">
 									<th className="px-4 py-3 font-medium">Market</th>
+									<th className="px-4 py-3 font-medium">Side</th>
 									<th className="px-4 py-3 font-medium">Size</th>
-									<th className="px-4 py-3 font-medium">Amount</th>
 									<th className="px-4 py-3 font-medium">Price</th>
 									<th className="px-4 py-3 font-medium">Fee</th>
 									<th className="px-4 py-3 font-medium">Time (UTC)</th>
@@ -110,7 +110,7 @@ export function TradesTable({
 														: "text-red-400"
 												}
 											>
-												{f.side}
+												{f.side.toUpperCase()}
 											</span>
 										</td>
 										<td className="px-4 py-3 text-green-400">
