@@ -40,7 +40,7 @@ export interface MeanFundingRow {
 }
 
 // Platform selection
-export type Platform = "hyperliquid" | "lighter";
+export type Platform = "hyperliquid" | "lighter" | "binance";
 
 // Market types
 export interface HyperliquidMarketMeta {

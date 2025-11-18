@@ -124,6 +124,9 @@ function Dashboard() {
 					// const marketId = ltMarket.lighter?.market_id?.toString() || "";
 					promises.push(fetchFundingSeries("lighter", selectedMarketId));
 				}
+				if (selectedMarketId) {
+					promises.push(fetchFundingSeries("binance", selectedMarketId));
+				}
 
 				if (promises.length > 0) {
 					const seriesList = await Promise.allSettled(promises);
@@ -144,7 +147,12 @@ function Dashboard() {
 
 						return {
 							name: s.platform,
-							color: s.platform === "hyperliquid" ? "#10b981" : "#3b82f6",
+							color:
+								s.platform === "hyperliquid"
+									? "#10b981"
+									: s.platform === "binance"
+									? "#3b22f6"
+									: "#3b82f6",
 							data: filteredPoints.map((p) => ({
 								timestamp: p.timestamp,
 								value: p.value,
