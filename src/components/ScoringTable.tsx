@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
 	fetchHlTrades,
 	fetchLighterTrades,
@@ -39,26 +39,30 @@ export function ScoringTable({
 
 	const [data, setData] = useState<score | null>(null);
 	const [tableData, setTableData] = useState<any[]>([]);
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
 	const handleFetch = async () => {
-		setLoading(true);
-		setLoading(true);
 		try {
-			const [response] = await Promise.all([fetchScoring(selectedMarket)]);
-			setData(response.data);
+			setLoading(true);
 
-			setLoading(false);
-			// setTotalPages(Math.ceil((trades.data?.total || 0) / 10));
+			const response = await fetchScoring(selectedMarket);
+			setData(response.data);
 		} catch (e: any) {
 			setError(e.message || "Error fetching positions");
 		} finally {
 			setLoading(false);
 		}
 	};
+
+	const lastFetchedMarket = useRef("");
+
 	useEffect(() => {
-		if (selectedMarket) {
-			handleFetch();
-		}
+		if (!selectedMarket) return;
+
+		// Prevent duplicate calls for same market
+		if (lastFetchedMarket.current === selectedMarket) return;
+
+		lastFetchedMarket.current = selectedMarket;
+		handleFetch();
 	}, [selectedMarket]);
 	return (
 		<section className="mb-10">
