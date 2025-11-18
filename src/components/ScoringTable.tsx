@@ -40,7 +40,7 @@ export function ScoringTable({
 
 	const [data, setData] = useState<score | null>(null);
 	const [tableData, setTableData] = useState<any[]>([]);
-	const [loading, setLoading] = useState(true);
+	// const [loading, setLoading] = useState(true);
 	// const handleFetch = async () => {
 	// 	try {
 	// 		// setLoading(true);
@@ -65,22 +65,26 @@ export function ScoringTable({
 	// 	lastFetchedMarket.current = selectedMarket;
 	// 	handleFetch();
 	// }, [selectedMarket]);
-	const { data: scoringData, isLoading: scoringLoading } =
-		useFetchScoring(selectedMarket);
+	const {
+		data: scoringData,
+		isLoading: scoringLoading,
+		refetch,
+	} = useFetchScoring(selectedMarket);
 	useEffect(() => {
 		if (scoringData) {
 			setData(scoringData.data);
-			setLoading(false);
-		} else {
-			setLoading(true);
+			// setLoading(false);
 		}
 	}, [scoringData]);
+	useEffect(() => {
+		refetch();
+	}, [selectedMarket]);
 	return (
 		<section className="mb-10">
 			<h2 className="text-xl font-semibold mt-10 mb-3 text-blue-400">
 				{title}
 			</h2>
-			{loading ? (
+			{scoringLoading ? (
 				<div className="flex items-center justify-center h-64">
 					<div className="flex flex-col items-center">
 						<svg

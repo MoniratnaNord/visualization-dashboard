@@ -25,9 +25,20 @@ export default function ChartPanel({
 			const ctx = c.getContext("2d");
 			if (ctx) {
 				const rect = c.getBoundingClientRect();
-				c.width = rect.width * (window.devicePixelRatio || 1);
-				c.height = rect.height * (window.devicePixelRatio || 1);
+				const dpr = window.devicePixelRatio || 1;
+				c.width = Math.max(1, Math.floor(rect.width * dpr));
+				c.height = Math.max(1, Math.floor(rect.height * dpr));
+				// ensure drawing coords are in CSS pixels
+				ctx.setTransform(1, 0, 0, 1, 0, 0);
+				ctx.scale(dpr, dpr);
+
+				// clear and show loading text
 				ctx.clearRect(0, 0, rect.width, rect.height);
+				ctx.font = "14px sans-serif";
+				ctx.fillStyle = "#9ca3af";
+				ctx.textAlign = "center";
+				ctx.textBaseline = "middle";
+				ctx.fillText("Loading...", rect.width / 2, rect.height / 2);
 			}
 			return;
 		}
