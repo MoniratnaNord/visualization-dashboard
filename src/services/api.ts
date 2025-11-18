@@ -87,7 +87,7 @@ export async function fetchFundingSeries(
 	const resp = await fetch(
 		`${
 			import.meta.env.VITE_FUNDING_API_URL
-		}/api/funding-rates/market-minutes?market=${symbolOrId}&dex=${platform}&minutes=1440`,
+		}/api/funding-rates/market-minutes?market=${symbolOrId}&dex=${platform}&minutes=2160`,
 		{
 			method: "GET",
 			headers: {

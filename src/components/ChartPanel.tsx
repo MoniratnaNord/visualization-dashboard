@@ -338,7 +338,7 @@ export default function ChartPanel({
 				<h3 className="text-lg font-semibold mt-10 mb-3 text-blue-400">
 					{title}
 				</h3>
-				<p className="text-gray-400 text-sm">{"Funding Rate (%) 24h Time"}</p>
+				<p className="text-gray-400 text-sm">{"Funding Rate (%) 36h Time"}</p>
 			</div>
 
 			<div className="p-4">
