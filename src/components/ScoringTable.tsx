@@ -6,6 +6,7 @@ import {
 	fetchScoring,
 } from "../api/positions";
 import { useParams } from "react-router-dom";
+import useFetchScoring from "../hooks/useFetchScoring";
 
 export function ScoringTable({
 	title,
@@ -40,30 +41,40 @@ export function ScoringTable({
 	const [data, setData] = useState<score | null>(null);
 	const [tableData, setTableData] = useState<any[]>([]);
 	const [loading, setLoading] = useState(true);
-	const handleFetch = async () => {
-		try {
-			setLoading(true);
+	// const handleFetch = async () => {
+	// 	try {
+	// 		// setLoading(true);
 
-			const response = await fetchScoring(selectedMarket);
-			setData(response.data);
-		} catch (e: any) {
-			setError(e.message || "Error fetching positions");
-		} finally {
-			setLoading(false);
-		}
-	};
+	// 		const response = await fetchScoring(selectedMarket);
+	// 		setData(response.data);
+	// 	} catch (e: any) {
+	// 		setError(e.message || "Error fetching positions");
+	// 	} finally {
+	// 		setLoading(false);
+	// 	}
+	// };
 
-	const lastFetchedMarket = useRef("");
+	// const lastFetchedMarket = useRef("");
 
+	// useEffect(() => {
+	// 	if (!selectedMarket) return;
+
+	// 	// Prevent duplicate calls for same market
+	// 	if (lastFetchedMarket.current === selectedMarket) return;
+
+	// 	lastFetchedMarket.current = selectedMarket;
+	// 	handleFetch();
+	// }, [selectedMarket]);
+	const { data: scoringData, isLoading: scoringLoading } =
+		useFetchScoring(selectedMarket);
 	useEffect(() => {
-		if (!selectedMarket) return;
-
-		// Prevent duplicate calls for same market
-		if (lastFetchedMarket.current === selectedMarket) return;
-
-		lastFetchedMarket.current = selectedMarket;
-		handleFetch();
-	}, [selectedMarket]);
+		if (scoringData) {
+			setData(scoringData.data);
+			setLoading(false);
+		} else {
+			setLoading(true);
+		}
+	}, [scoringData]);
 	return (
 		<section className="mb-10">
 			<h2 className="text-xl font-semibold mt-10 mb-3 text-blue-400">
