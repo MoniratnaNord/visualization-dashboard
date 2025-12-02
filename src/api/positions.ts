@@ -32,9 +32,14 @@ export async function fetchHlFundings(
 	isSpecific: boolean
 ) {
 	const url = isSpecific
-		? `${
-				import.meta.env.VITE_API_URL
-		  }/api/user/${address}/get-hl-fundings?page=${page}&start_time=${"26/10/2025, 12:56:36 pm"}`
+		? address.toLowerCase() ===
+		  "0xA2a95178FFED95ce9a2278bcA9bB5bef8C0DC95C".toLowerCase()
+			? `${
+					import.meta.env.VITE_API_URL
+			  }/api/user/${address}/get-hl-fundings?page=${page}&start_time=${"26/10/2025, 12:56:36 pm"}`
+			: `${
+					import.meta.env.VITE_API_URL
+			  }/api/user/${address}/get-hl-fundings?page=${page}&start_time=${"28/11/2025, 11:00:00 PM"}`
 		: `${
 				import.meta.env.VITE_API_URL
 		  }/api/user/${address}/get-hl-fundings?page=${page}`;
@@ -50,9 +55,14 @@ export async function fetchLighterFundings(
 	isSpecific: boolean
 ) {
 	const url = isSpecific
-		? `${
-				import.meta.env.VITE_API_URL
-		  }/api/user/${address}/get-lighter-fundings?page=${page}&start_time=${"26/10/2025, 12:56:36 pm"}`
+		? address.toLowerCase() ===
+		  "0xA2a95178FFED95ce9a2278bcA9bB5bef8C0DC95C".toLowerCase()
+			? `${
+					import.meta.env.VITE_API_URL
+			  }/api/user/${address}/get-lighter-fundings?page=${page}&start_time=${"26/10/2025, 12:56:36 pm"}`
+			: `${
+					import.meta.env.VITE_API_URL
+			  }/api/user/${address}/get-lighter-fundings?page=${page}&start_time=${"28/11/2025, 11:00:00 PM"}`
 		: `${
 				import.meta.env.VITE_API_URL
 		  }/api/user/${address}/get-lighter-fundings?page=${page}`;
@@ -68,9 +78,14 @@ export async function fetchHlTrades(
 	isSpecific: boolean
 ) {
 	const url = isSpecific
-		? `${
-				import.meta.env.VITE_API_URL
-		  }/api/user/${address}/get-hl-trades?page=${page}&start_time=${"26/10/2025, 12:56:36 pm"}`
+		? address.toLowerCase() ===
+		  "0xA2a95178FFED95ce9a2278bcA9bB5bef8C0DC95C".toLowerCase()
+			? `${
+					import.meta.env.VITE_API_URL
+			  }/api/user/${address}/get-hl-trades?page=${page}&start_time=${"26/10/2025, 12:56:36 pm"}`
+			: `${
+					import.meta.env.VITE_API_URL
+			  }/api/user/${address}/get-hl-trades?page=${page}&start_time=${"28/11/2025, 11:00:00 pm"}`
 		: `${
 				import.meta.env.VITE_API_URL
 		  }/api/user/${address}/get-hl-trades?page=${page}`;
@@ -86,9 +101,14 @@ export async function fetchLighterTrades(
 	isSpecific: boolean
 ) {
 	const url = isSpecific
-		? `${
-				import.meta.env.VITE_API_URL
-		  }/api/user/${address}/get-lighter-trades?page=${page}&start_time=${"26/10/2025, 12:56:32 pm"}`
+		? address.toLowerCase() ===
+		  "0xA2a95178FFED95ce9a2278bcA9bB5bef8C0DC95C".toLowerCase()
+			? `${
+					import.meta.env.VITE_API_URL
+			  }/api/user/${address}/get-lighter-trades?page=${page}&start_time=${"26/10/2025, 12:56:32 pm"}`
+			: `${
+					import.meta.env.VITE_API_URL
+			  }/api/user/${address}/get-lighter-trades?page=${page}&start_time=${"26/10/2025, 12:56:32 pm"}`
 		: `${
 				import.meta.env.VITE_API_URL
 		  }/api/user/${address}/get-lighter-trades?page=${page}`;
@@ -129,9 +149,14 @@ export async function fetchPnlData(address: string) {
 }
 export async function fetchTokenFundings(address: string, isSpecific: boolean) {
 	const url = isSpecific
-		? `${
-				import.meta.env.VITE_API_URL
-		  }/api/user/${address}/token-wise-fundings?start_time=${"26/10/2025, 12:56:36 pm"}`
+		? address.toLowerCase() ===
+		  "0xA2a95178FFED95ce9a2278bcA9bB5bef8C0DC95C".toLowerCase()
+			? `${
+					import.meta.env.VITE_API_URL
+			  }/api/user/${address}/token-wise-fundings?start_time=${"26/10/2025, 12:56:36 pm"}`
+			: `${
+					import.meta.env.VITE_API_URL
+			  }/api/user/${address}/token-wise-fundings?start_time=${"28/11/2025, 11:00:00 pm"}`
 		: `${import.meta.env.VITE_API_URL}/api/user/${address}/token-wise-fundings`;
 	const res = await fetch(url);
 
@@ -141,9 +166,14 @@ export async function fetchTokenFundings(address: string, isSpecific: boolean) {
 }
 export async function fetchMarketFees(address: string, isSpecific: boolean) {
 	const url = isSpecific
-		? `${
-				import.meta.env.VITE_API_URL
-		  }/api/user/${address}/market-wise-fees?start_time=${"26/10/2025, 12:56:36 pm"}`
+		? address.toLowerCase() ===
+		  "0xA2a95178FFED95ce9a2278bcA9bB5bef8C0DC95C".toLowerCase()
+			? `${
+					import.meta.env.VITE_API_URL
+			  }/api/user/${address}/market-wise-fees?start_time=${"26/10/2025, 12:56:36 pm"}`
+			: `${
+					import.meta.env.VITE_API_URL
+			  }/api/user/${address}/market-wise-fees?start_time=${"28/11/2025, 11:00:00 pm"}`
 		: `${import.meta.env.VITE_API_URL}/api/user/${address}/market-wise-fees`;
 	const res = await fetch(url);
 
@@ -201,10 +231,16 @@ export async function fetchScoring(symbol: string) {
 	return data;
 }
 export async function fetchTradeDetails(address: string, isSpecific: boolean) {
+	console.log("fetching trade details for", address, isSpecific);
 	const url = isSpecific
-		? `${
-				import.meta.env.VITE_API_URL
-		  }/api/user/${address}/fetch-trade-details?start_time=${"26/10/2025, 12:56:36 pm"}`
+		? address.toLowerCase() ===
+		  "0xA2a95178FFED95ce9a2278bcA9bB5bef8C0DC95C".toLowerCase()
+			? `${
+					import.meta.env.VITE_API_URL
+			  }/api/user/${address}/fetch-trade-details?start_time=${"26/10/2025, 12:56:36 pm"}`
+			: `${
+					import.meta.env.VITE_API_URL
+			  }/api/user/${address}/fetch-trade-details?start_time=${"28/11/2025, 11:00:00 pm"}`
 		: `${import.meta.env.VITE_API_URL}/api/user/${address}/fetch-trade-details`;
 	const res = await fetch(url);
 

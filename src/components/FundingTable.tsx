@@ -38,7 +38,9 @@ export default function FundingTable({
 						address,
 						page,
 						address.toLowerCase() ===
-							"0xA2a95178FFED95ce9a2278bcA9bB5bef8C0DC95C".toLowerCase()
+							"0xA2a95178FFED95ce9a2278bcA9bB5bef8C0DC95C".toLowerCase() ||
+							address.toLowerCase() ===
+								"0x85290Ee672292528376adc10ef1Ff6f4Dbb29bDF".toLowerCase()
 					),
 				]);
 				setData(trades.data.hyperliquid_fundings || []);
@@ -49,7 +51,9 @@ export default function FundingTable({
 						address,
 						page,
 						address.toLowerCase() ===
-							"0xA2a95178FFED95ce9a2278bcA9bB5bef8C0DC95C".toLowerCase()
+							"0xA2a95178FFED95ce9a2278bcA9bB5bef8C0DC95C".toLowerCase() ||
+							address.toLowerCase() ===
+								"0x85290Ee672292528376adc10ef1Ff6f4Dbb29bDF".toLowerCase()
 					),
 				]);
 				setData(trades.data.lighter_fundings || []);

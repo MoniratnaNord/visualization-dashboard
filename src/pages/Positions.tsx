@@ -67,24 +67,32 @@ export default function Positions() {
 				fetchTokenFundings(
 					address,
 					address.toLowerCase() ===
-						"0xA2a95178FFED95ce9a2278bcA9bB5bef8C0DC95C".toLowerCase()
+						"0xA2a95178FFED95ce9a2278bcA9bB5bef8C0DC95C".toLowerCase() ||
+						address.toLowerCase() ===
+							"0x85290Ee672292528376adc10ef1Ff6f4Dbb29bDF".toLowerCase()
 				),
 				fetchMarketFees(
 					address,
 					address.toLowerCase() ===
-						"0xA2a95178FFED95ce9a2278bcA9bB5bef8C0DC95C".toLowerCase()
+						"0xA2a95178FFED95ce9a2278bcA9bB5bef8C0DC95C".toLowerCase() ||
+						address.toLowerCase() ===
+							"0x85290Ee672292528376adc10ef1Ff6f4Dbb29bDF".toLowerCase()
 				),
 				fetchHlTrades(
 					address,
 					1,
 					address.toLowerCase() ===
-						"0xA2a95178FFED95ce9a2278bcA9bB5bef8C0DC95C".toLowerCase()
+						"0xA2a95178FFED95ce9a2278bcA9bB5bef8C0DC95C".toLowerCase() ||
+						address.toLowerCase() ===
+							"0x85290Ee672292528376adc10ef1Ff6f4Dbb29bDF".toLowerCase()
 				),
 				fetchLighterTrades(
 					address,
 					1,
 					address.toLowerCase() ===
-						"0xA2a95178FFED95ce9a2278bcA9bB5bef8C0DC95C".toLowerCase()
+						"0xA2a95178FFED95ce9a2278bcA9bB5bef8C0DC95C".toLowerCase() ||
+						address.toLowerCase() ===
+							"0x85290Ee672292528376adc10ef1Ff6f4Dbb29bDF".toLowerCase()
 				),
 				fetchLighterFundingRate(),
 			]);
