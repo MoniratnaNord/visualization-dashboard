@@ -132,7 +132,10 @@ export function TradesTable({
 											</span>
 										</td>
 										<td className="px-4 py-3 text-green-400">
-											{Number(f.fee).toFixed(5)}
+											{(f.market.startsWith("@")
+												? Number(f.price) * Number(f.fee)
+												: Number(f.fee)
+											).toFixed(5)}
 										</td>
 										<td className="px-4 py-3 text-green-400">
 											{formatTimestamp(f.buy_time)}
