@@ -14,6 +14,22 @@ export async function fetchHyperliquidUserPositions(address: string) {
 	const data = await res.json();
 	return data.assetPositions || [];
 }
+export async function spotFetchHyperliquidUserPositions(address: string) {
+	const body = {
+		type: "spotClearinghouseState",
+		user: address,
+	};
+
+	const res = await fetch("https://api.hyperliquid.xyz/info", {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify(body),
+	});
+
+	if (!res.ok) throw new Error("Failed to fetch Hyperliquid data");
+	const data = await res.json();
+	return data.balances || [];
+}
 
 export async function fetchLighterUserPositions(address: string) {
 	const url = `https://mainnet.zklighter.elliot.ai/api/v1/account?by=l1_address&value=${address}`;

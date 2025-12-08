@@ -8,6 +8,7 @@ import {
 	fetchTokenFundings,
 	fetchHlTrades,
 	fetchLighterTrades,
+	spotFetchHyperliquidUserPositions,
 } from "../api/positions";
 import { fetchHyperliquidMarkets, fetchLighterMarkets } from "../services/api";
 import { useParams } from "react-router-dom";
@@ -26,6 +27,7 @@ export default function Positions() {
 	const [activeTab, setActiveTab] = useState<TabType>("summary");
 	const [address, setAddress] = useState("");
 	const [hlPositions, setHlPositions] = useState<any[]>([]);
+	const [hlSpotPositions, setHlSpotPositions] = useState<any[]>([]);
 	const [ltPositions, setLtPositions] = useState<any[]>([]);
 	const [tokenFundingHl, setTokenFundingHl] = useState<any[]>([]);
 	const [tokenFundingLighter, setTokenFundingLighter] = useState<any[]>([]);
@@ -44,6 +46,7 @@ export default function Positions() {
 		setError(null);
 		setLoading(true);
 		setHlPositions([]);
+		setHlSpotPositions([]);
 		setLtPositions([]);
 		setTokenFundingHl([]);
 		setTokenFundingLighter([]);
@@ -53,6 +56,7 @@ export default function Positions() {
 		try {
 			const [
 				hl,
+				hlSpot,
 				lt,
 				pnlData,
 				tokenFunding,
@@ -62,6 +66,7 @@ export default function Positions() {
 				fundingRate,
 			] = await Promise.all([
 				fetchHyperliquidUserPositions(address),
+				spotFetchHyperliquidUserPositions(address),
 				fetchLighterUserPositions(address),
 				fetchPnlData(address),
 				fetchTokenFundings(
@@ -97,6 +102,7 @@ export default function Positions() {
 				fetchLighterFundingRate(),
 			]);
 			setHlPositions(hl);
+			setHlSpotPositions(hlSpot);
 			setLtPositions(lt);
 			setTokenFundingHl(tokenFunding.data.hyperliquid_token_wise || []);
 			setTokenFundingLighter(tokenFunding.data.lighter_token_wise || []);
@@ -123,6 +129,7 @@ export default function Positions() {
 				setAddress("");
 				setPnlData(null);
 				setHlPositions([]);
+				setHlSpotPositions([]);
 				setLtPositions([]);
 				setTokenFundingHl([]);
 				setTokenFundingLighter([]);
@@ -135,6 +142,7 @@ export default function Positions() {
 			setAddress("");
 			setPnlData(null);
 			setHlPositions([]);
+			setHlSpotPositions([]);
 			setLtPositions([]);
 			setTokenFundingHl([]);
 			setTokenFundingLighter([]);
@@ -578,7 +586,50 @@ export default function Positions() {
 										</div>
 									)}
 								</div>
-
+								<div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 overflow-hidden">
+									<div className="p-6 border-b border-slate-700/50">
+										<h3 className="text-xl font-bold text-purple-400">
+											Spot Hyperliquid Positions
+										</h3>
+									</div>
+									{hlSpotPositions.length === 0 ? (
+										<div className="p-6 text-center text-slate-400">
+											No active Spot Hyperliquid positions found.
+										</div>
+									) : (
+										<div className="overflow-x-auto">
+											<table className="w-full">
+												<thead className="bg-slate-900/50">
+													<tr className="text-left text-slate-400 text-sm">
+														<th className="px-4 py-3 font-medium">Symbol</th>
+														<th className="px-4 py-3 font-medium">Token ID</th>
+														<th className="px-4 py-3 font-medium">Quantity</th>
+														<th className="px-4 py-3 font-medium">Hold</th>
+														<th className="px-4 py-3 font-medium">Entry NTL</th>
+													</tr>
+												</thead>
+												<tbody className="text-slate-200">
+													{hlSpotPositions.map((p, i) => (
+														<tr
+															key={i}
+															className="border-t border-slate-700/50 hover:bg-slate-700/30"
+														>
+															<td className="px-4 py-3 font-medium">
+																{p.coin}
+															</td>
+															<td className="px-4 py-3">{p.token}</td>
+															<td className="px-4 py-3">{p.total}</td>
+															<td className="px-4 py-3">{p.hold}</td>
+															<td className="px-4 py-3">
+																{Number(p.entryNtl).toFixed(2)}
+															</td>
+														</tr>
+													))}
+												</tbody>
+											</table>
+										</div>
+									)}
+								</div>
 								<div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 overflow-hidden">
 									<div className="p-6 border-b border-slate-700/50">
 										<h3 className="text-xl font-bold text-purple-400">
