@@ -19,6 +19,7 @@ import { TradesTable } from "../components/TradesTable";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import useFetchTradeDetails from "../hooks/useFetchTradeDetails";
+import useFetchCurrentBalance from "../hooks/useFetchCurrentBalance";
 
 type TabType = "positions" | "funding" | "summary" | "trades" | "allFunding";
 
@@ -186,7 +187,7 @@ export default function Positions() {
 
 		const startPolling = () => {
 			if (!intervalId) {
-				intervalId = setInterval(fetchLiveData, 5000);
+				intervalId = setInterval(fetchLiveData, 10000);
 			}
 		};
 
@@ -282,6 +283,8 @@ export default function Positions() {
 		address,
 		address !== ""
 	);
+	const { data: currentBalanceData, isLoading: currentBalanceLoading } =
+		useFetchCurrentBalance(address);
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -451,11 +454,14 @@ export default function Positions() {
 												<span className="text-white font-semibold">
 													$
 													{Number(
-														pnlData.data.hyperliquid.account_balance
+														!currentBalanceLoading
+															? currentBalanceData.data.hyperliquid
+																	.account_balance
+															: 0
 													).toFixed(2)}
 												</span>
 											</div>
-											<div className="flex justify-between">
+											{/* <div className="flex justify-between">
 												<span className="text-slate-400">PNL</span>
 												<span className="text-green-400 font-semibold">
 													${Number(pnlData.data.hyperliquid.pnl).toFixed(2)}
@@ -469,7 +475,7 @@ export default function Positions() {
 													)}
 													%
 												</span>
-											</div>
+											</div> */}
 											{/* <div className="flex justify-between">
 												<span className="text-slate-400">APR</span>
 												<span className="text-purple-400 font-semibold">
@@ -497,12 +503,14 @@ export default function Positions() {
 												<span className="text-slate-400">Current Balance</span>
 												<span className="text-white font-semibold">
 													$
-													{Number(pnlData.data.lighter.account_balance).toFixed(
-														2
-													)}
+													{Number(
+														!currentBalanceLoading
+															? currentBalanceData.data.lighter.account_balance
+															: 0
+													).toFixed(2)}
 												</span>
 											</div>
-											<div className="flex justify-between">
+											{/* <div className="flex justify-between">
 												<span className="text-slate-400">PNL</span>
 												<span className="text-green-400 font-semibold">
 													${Number(pnlData.data.lighter.pnl).toFixed(2)}
@@ -513,7 +521,7 @@ export default function Positions() {
 												<span className="text-green-400 font-semibold">
 													{Number(pnlData.data.lighter.pnl_percent).toFixed(2)}%
 												</span>
-											</div>
+											</div> */}
 											{/* <div className="flex justify-between">
 												<span className="text-slate-400">APR</span>
 												<span className="text-purple-400 font-semibold">

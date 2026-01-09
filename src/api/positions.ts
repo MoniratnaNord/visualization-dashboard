@@ -237,3 +237,13 @@ export async function fetchTradeDetails(address: string, isSpecific: boolean) {
 	const data = await res.json();
 	return data;
 }
+export async function fetchCurrentBalance(address: string) {
+	const url = `${
+		import.meta.env.VITE_API_URL
+	}/api/user/${address}/current-balance`;
+	const res = await fetch(url);
+	if (!res.ok) throw new Error("Failed to fetch PNL");
+	console.log("checking response", res);
+	const data = await res.json();
+	return data;
+}
