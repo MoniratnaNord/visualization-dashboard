@@ -99,7 +99,7 @@ export default function FundingTable({
 								<tr className="bg-slate-900/50 text-left text-slate-400 text-sm">
 									<th className="px-4 py-3 font-medium">Market</th>
 									<th className="px-4 py-3 font-medium">Side</th>
-									<th className="px-4 py-3 font-medium">Change</th>
+									<th className="px-4 py-3 font-medium">Funding Earned</th>
 									<th className="px-4 py-3 font-medium">Funding Rate (%)</th>
 									<th className="px-4 py-3 font-medium">Time (UTC)</th>
 								</tr>

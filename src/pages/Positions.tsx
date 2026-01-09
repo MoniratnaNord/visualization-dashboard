@@ -128,14 +128,12 @@ export default function Positions() {
 	};
 	const fetchLiveData = async () => {
 		try {
-			const [hl, lt, pnlData] = await Promise.all([
+			const [hl, lt] = await Promise.all([
 				fetchHyperliquidUserPositions(address),
 				fetchLighterUserPositions(address),
-				fetchPnlData(address),
 			]);
 			setHlPositions(hl);
 			setLtPositions(lt);
-			setPnlData(pnlData);
 		} catch (e: any) {
 			console.error("Live fetch failed", e);
 		}
@@ -188,7 +186,7 @@ export default function Positions() {
 
 		const startPolling = () => {
 			if (!intervalId) {
-				intervalId = setInterval(fetchLiveData, 10000);
+				intervalId = setInterval(fetchLiveData, 5000);
 			}
 		};
 
@@ -390,7 +388,7 @@ export default function Positions() {
 					<div className="space-y-6">
 						{activeTab === "summary" && (
 							<div className="space-y-6">
-								<div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+								<div className="grid grid-cols-1 md:grid-cols-4 gap-6">
 									<div className="bg-gradient-to-br from-blue-500/20 to-purple-500/20 backdrop-blur-sm rounded-2xl border border-blue-500/30 p-6">
 										<div className="text-sm text-blue-300 mb-2">
 											Total Deposit
@@ -403,12 +401,12 @@ export default function Positions() {
 											).toFixed(2)}
 										</div>
 									</div>
-									<div className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 backdrop-blur-sm rounded-2xl border border-green-500/30 p-6">
+									{/* <div className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 backdrop-blur-sm rounded-2xl border border-green-500/30 p-6">
 										<div className="text-sm text-green-300 mb-2">Total PNL</div>
 										<div className="text-3xl font-bold text-white">
 											{Number(pnlData.data.total_pnl_percent).toFixed(2)}%
 										</div>
-									</div>
+									</div> */}
 									<div className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 backdrop-blur-sm rounded-2xl border border-green-500/30 p-6">
 										<div className="text-sm text-green-300 mb-2">APR</div>
 										<div className="text-3xl font-bold text-white">
