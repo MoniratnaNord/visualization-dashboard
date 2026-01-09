@@ -586,7 +586,7 @@ export default function Positions() {
 										</div>
 									)}
 								</div>
-								<div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 overflow-hidden">
+								{/* <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 overflow-hidden">
 									<div className="p-6 border-b border-slate-700/50">
 										<h3 className="text-xl font-bold text-purple-400">
 											Spot Hyperliquid Positions
@@ -629,7 +629,7 @@ export default function Positions() {
 											</table>
 										</div>
 									)}
-								</div>
+								</div> */}
 								<div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 overflow-hidden">
 									<div className="p-6 border-b border-slate-700/50">
 										<h3 className="text-xl font-bold text-purple-400">

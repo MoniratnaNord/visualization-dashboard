@@ -1,3 +1,5 @@
+import { getStartTime } from "../services/getStartTime";
+
 export async function fetchHyperliquidUserPositions(address: string) {
 	const body = {
 		type: "clearinghouseState",
@@ -47,15 +49,11 @@ export async function fetchHlFundings(
 	page: number,
 	isSpecific: boolean
 ) {
+	const startTime = isSpecific ? getStartTime(address.toLowerCase()) : null;
 	const url = isSpecific
-		? address.toLowerCase() ===
-		  "0xA2a95178FFED95ce9a2278bcA9bB5bef8C0DC95C".toLowerCase()
-			? `${
-					import.meta.env.VITE_API_URL
-			  }/api/user/${address}/get-hl-fundings?page=${page}&start_time=${"26/10/2025, 12:56:36 pm"}`
-			: `${
-					import.meta.env.VITE_API_URL
-			  }/api/user/${address}/get-hl-fundings?page=${page}&start_time=${"29/11/2025, 06:52:35 pm"}`
+		? `${
+				import.meta.env.VITE_API_URL
+		  }/api/user/${address}/get-hl-fundings?page=${page}&start_time=${startTime}`
 		: `${
 				import.meta.env.VITE_API_URL
 		  }/api/user/${address}/get-hl-fundings?page=${page}`;
@@ -70,15 +68,11 @@ export async function fetchLighterFundings(
 	page: number,
 	isSpecific: boolean
 ) {
+	const startTime = isSpecific ? getStartTime(address.toLowerCase()) : null;
 	const url = isSpecific
-		? address.toLowerCase() ===
-		  "0xA2a95178FFED95ce9a2278bcA9bB5bef8C0DC95C".toLowerCase()
-			? `${
-					import.meta.env.VITE_API_URL
-			  }/api/user/${address}/get-lighter-fundings?page=${page}&start_time=${"26/10/2025, 12:56:36 pm"}`
-			: `${
-					import.meta.env.VITE_API_URL
-			  }/api/user/${address}/get-lighter-fundings?page=${page}&start_time=${"29/11/2025, 06:52:35 pm"}`
+		? `${
+				import.meta.env.VITE_API_URL
+		  }/api/user/${address}/get-lighter-fundings?page=${page}&start_time=${startTime}`
 		: `${
 				import.meta.env.VITE_API_URL
 		  }/api/user/${address}/get-lighter-fundings?page=${page}`;
@@ -93,15 +87,11 @@ export async function fetchHlTrades(
 	page: number,
 	isSpecific: boolean
 ) {
+	const startTime = isSpecific ? getStartTime(address.toLowerCase()) : null;
 	const url = isSpecific
-		? address.toLowerCase() ===
-		  "0xA2a95178FFED95ce9a2278bcA9bB5bef8C0DC95C".toLowerCase()
-			? `${
-					import.meta.env.VITE_API_URL
-			  }/api/user/${address}/get-hl-trades?page=${page}&start_time=${"26/10/2025, 12:56:36 pm"}`
-			: `${
-					import.meta.env.VITE_API_URL
-			  }/api/user/${address}/get-hl-trades?page=${page}&start_time=${"29/11/2025, 06:52:35 pm"}`
+		? `${
+				import.meta.env.VITE_API_URL
+		  }/api/user/${address}/get-hl-trades?page=${page}&start_time=${startTime}`
 		: `${
 				import.meta.env.VITE_API_URL
 		  }/api/user/${address}/get-hl-trades?page=${page}`;
@@ -116,15 +106,11 @@ export async function fetchLighterTrades(
 	page: number,
 	isSpecific: boolean
 ) {
+	const startTime = isSpecific ? getStartTime(address.toLowerCase()) : null;
 	const url = isSpecific
-		? address.toLowerCase() ===
-		  "0xA2a95178FFED95ce9a2278bcA9bB5bef8C0DC95C".toLowerCase()
-			? `${
-					import.meta.env.VITE_API_URL
-			  }/api/user/${address}/get-lighter-trades?page=${page}&start_time=${"26/10/2025, 12:56:32 pm"}`
-			: `${
-					import.meta.env.VITE_API_URL
-			  }/api/user/${address}/get-lighter-trades?page=${page}&start_time=${"29/11/2025, 06:52:35 pm"}`
+		? `${
+				import.meta.env.VITE_API_URL
+		  }/api/user/${address}/get-lighter-trades?page=${page}&start_time=${startTime}`
 		: `${
 				import.meta.env.VITE_API_URL
 		  }/api/user/${address}/get-lighter-trades?page=${page}`;
@@ -164,15 +150,11 @@ export async function fetchPnlData(address: string) {
 	return data;
 }
 export async function fetchTokenFundings(address: string, isSpecific: boolean) {
+	const startTime = isSpecific ? getStartTime(address.toLowerCase()) : null;
 	const url = isSpecific
-		? address.toLowerCase() ===
-		  "0xA2a95178FFED95ce9a2278bcA9bB5bef8C0DC95C".toLowerCase()
-			? `${
-					import.meta.env.VITE_API_URL
-			  }/api/user/${address}/token-wise-fundings?start_time=${"26/10/2025, 12:56:36 pm"}`
-			: `${
-					import.meta.env.VITE_API_URL
-			  }/api/user/${address}/token-wise-fundings?start_time=${"29/11/2025, 06:52:35 pm"}`
+		? `${
+				import.meta.env.VITE_API_URL
+		  }/api/user/${address}/token-wise-fundings?start_time=${startTime}`
 		: `${import.meta.env.VITE_API_URL}/api/user/${address}/token-wise-fundings`;
 	const res = await fetch(url);
 
@@ -181,15 +163,11 @@ export async function fetchTokenFundings(address: string, isSpecific: boolean) {
 	return data;
 }
 export async function fetchMarketFees(address: string, isSpecific: boolean) {
+	const startTime = isSpecific ? getStartTime(address.toLowerCase()) : null;
 	const url = isSpecific
-		? address.toLowerCase() ===
-		  "0xA2a95178FFED95ce9a2278bcA9bB5bef8C0DC95C".toLowerCase()
-			? `${
-					import.meta.env.VITE_API_URL
-			  }/api/user/${address}/market-wise-fees?start_time=${"26/10/2025, 12:56:36 pm"}`
-			: `${
-					import.meta.env.VITE_API_URL
-			  }/api/user/${address}/market-wise-fees?start_time=${"29/11/2025, 06:52:35 pm"}`
+		? `${
+				import.meta.env.VITE_API_URL
+		  }/api/user/${address}/market-wise-fees?start_time=${startTime}`
 		: `${import.meta.env.VITE_API_URL}/api/user/${address}/market-wise-fees`;
 	const res = await fetch(url);
 
@@ -247,16 +225,11 @@ export async function fetchScoring(symbol: string) {
 	return data;
 }
 export async function fetchTradeDetails(address: string, isSpecific: boolean) {
-	console.log("fetching trade details for", address, isSpecific);
+	const startTime = isSpecific ? getStartTime(address.toLowerCase()) : null;
 	const url = isSpecific
-		? address.toLowerCase() ===
-		  "0xA2a95178FFED95ce9a2278bcA9bB5bef8C0DC95C".toLowerCase()
-			? `${
-					import.meta.env.VITE_API_URL
-			  }/api/user/${address}/fetch-trade-details?start_time=${"26/10/2025, 12:56:36 pm"}`
-			: `${
-					import.meta.env.VITE_API_URL
-			  }/api/user/${address}/fetch-trade-details?start_time=${"29/11/2025, 06:52:35 pm"}`
+		? `${
+				import.meta.env.VITE_API_URL
+		  }/api/user/${address}/fetch-trade-details?start_time=${startTime}`
 		: `${import.meta.env.VITE_API_URL}/api/user/${address}/fetch-trade-details`;
 	const res = await fetch(url);
 
