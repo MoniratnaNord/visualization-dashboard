@@ -11,6 +11,6 @@ export const STATIC_USERS: Record<string, UserStaticConfig> = {
 		startTime: "09/01/2026, 12:13:00 pm",
 	},
 	"0x0d6557223d17fd954a6d4edd378141215b5e6240": {
-		startTime: "09/01/2026, 12:13:00 pm",
+		startTime: "09/01/2026, 12:55:28 pm",
 	},
 };

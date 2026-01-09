@@ -74,14 +74,18 @@ export default function Positions() {
 					address.toLowerCase() ===
 						"0xA2a95178FFED95ce9a2278bcA9bB5bef8C0DC95C".toLowerCase() ||
 						address.toLowerCase() ===
-							"0x85290Ee672292528376adc10ef1Ff6f4Dbb29bDF".toLowerCase()
+							"0x85290Ee672292528376adc10ef1Ff6f4Dbb29bDF".toLowerCase() ||
+						address.toLowerCase() ===
+							"0x0d6557223d17fd954a6d4edd378141215b5e6240"
 				),
 				fetchMarketFees(
 					address,
 					address.toLowerCase() ===
 						"0xA2a95178FFED95ce9a2278bcA9bB5bef8C0DC95C".toLowerCase() ||
 						address.toLowerCase() ===
-							"0x85290Ee672292528376adc10ef1Ff6f4Dbb29bDF".toLowerCase()
+							"0x85290Ee672292528376adc10ef1Ff6f4Dbb29bDF".toLowerCase() ||
+						address.toLowerCase() ===
+							"0x0d6557223d17fd954a6d4edd378141215b5e6240"
 				),
 				fetchHlTrades(
 					address,
@@ -89,7 +93,9 @@ export default function Positions() {
 					address.toLowerCase() ===
 						"0xA2a95178FFED95ce9a2278bcA9bB5bef8C0DC95C".toLowerCase() ||
 						address.toLowerCase() ===
-							"0x85290Ee672292528376adc10ef1Ff6f4Dbb29bDF".toLowerCase()
+							"0x85290Ee672292528376adc10ef1Ff6f4Dbb29bDF".toLowerCase() ||
+						address.toLowerCase() ===
+							"0x0d6557223d17fd954a6d4edd378141215b5e6240"
 				),
 				fetchLighterTrades(
 					address,
@@ -97,7 +103,9 @@ export default function Positions() {
 					address.toLowerCase() ===
 						"0xA2a95178FFED95ce9a2278bcA9bB5bef8C0DC95C".toLowerCase() ||
 						address.toLowerCase() ===
-							"0x85290Ee672292528376adc10ef1Ff6f4Dbb29bDF".toLowerCase()
+							"0x85290Ee672292528376adc10ef1Ff6f4Dbb29bDF".toLowerCase() ||
+						address.toLowerCase() ===
+							"0x0d6557223d17fd954a6d4edd378141215b5e6240"
 				),
 				fetchLighterFundingRate(),
 			]);
@@ -116,6 +124,20 @@ export default function Positions() {
 			setError(e.message || "Error fetching positions");
 		} finally {
 			setLoading(false);
+		}
+	};
+	const fetchLiveData = async () => {
+		try {
+			const [hl, lt, pnlData] = await Promise.all([
+				fetchHyperliquidUserPositions(address),
+				fetchLighterUserPositions(address),
+				fetchPnlData(address),
+			]);
+			setHlPositions(hl);
+			setLtPositions(lt);
+			setPnlData(pnlData);
+		} catch (e: any) {
+			console.error("Live fetch failed", e);
 		}
 	};
 
@@ -157,6 +179,37 @@ export default function Positions() {
 		if (address && params.address) {
 			handleFetch();
 		}
+	}, [address]);
+
+	useEffect(() => {
+		if (!address) return;
+
+		let intervalId: NodeJS.Timeout | null = null;
+
+		const startPolling = () => {
+			if (!intervalId) {
+				intervalId = setInterval(fetchLiveData, 10000);
+			}
+		};
+
+		const stopPolling = () => {
+			if (intervalId) {
+				clearInterval(intervalId);
+				intervalId = null;
+			}
+		};
+
+		startPolling();
+
+		document.addEventListener("visibilitychange", () => {
+			if (document.hidden) stopPolling();
+			else startPolling();
+		});
+
+		return () => {
+			stopPolling();
+			document.removeEventListener("visibilitychange", startPolling);
+		};
 	}, [address]);
 
 	const [fundingMap, setFundingMap] = useState<Record<string, number>>({});
@@ -231,7 +284,6 @@ export default function Positions() {
 		address,
 		address !== ""
 	);
-	console.log("tradeData", tradeData?.data);
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -501,7 +553,7 @@ export default function Positions() {
 														</th>
 														<th className="px-4 py-3 font-medium">Size</th>
 														<th className="px-4 py-3 font-medium">Value</th>
-														<th className="px-4 py-3 font-medium">ROE</th>
+														{/* <th className="px-4 py-3 font-medium">ROE</th> */}
 														<th className="px-4 py-3 font-medium">
 															Unrealized PnL
 														</th>
@@ -544,7 +596,7 @@ export default function Positions() {
 																<td className="px-4 py-3">
 																	{p.position.positionValue}
 																</td>
-																<td className="px-4 py-3">
+																{/* <td className="px-4 py-3">
 																	<span
 																		className={
 																			Number(p.position.returnOnEquity) >= 0
@@ -557,7 +609,7 @@ export default function Positions() {
 																		).toFixed(2)}
 																		%
 																	</span>
-																</td>
+																</td> */}
 																<td className="px-4 py-3">
 																	<span
 																		className={
