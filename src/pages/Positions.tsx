@@ -472,12 +472,12 @@ export default function Positions() {
 													%
 												</span>
 											</div>
-											<div className="flex justify-between">
+											{/* <div className="flex justify-between">
 												<span className="text-slate-400">APR</span>
 												<span className="text-purple-400 font-semibold">
 													{Number(pnlData.data.hyperliquid.apr).toFixed(2)}%
 												</span>
-											</div>
+											</div> */}
 										</div>
 									</div>
 
@@ -516,12 +516,12 @@ export default function Positions() {
 													{Number(pnlData.data.lighter.pnl_percent).toFixed(2)}%
 												</span>
 											</div>
-											<div className="flex justify-between">
+											{/* <div className="flex justify-between">
 												<span className="text-slate-400">APR</span>
 												<span className="text-purple-400 font-semibold">
 													{Number(pnlData.data.lighter.apr).toFixed(2)}%
 												</span>
-											</div>
+											</div> */}
 										</div>
 									</div>
 								</div>
