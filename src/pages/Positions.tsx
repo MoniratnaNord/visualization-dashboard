@@ -285,6 +285,12 @@ export default function Positions() {
 	);
 	const { data: currentBalanceData, isLoading: currentBalanceLoading } =
 		useFetchCurrentBalance(address);
+
+	const Spinner = () => (
+		<div className="flex justify-center items-center py-10">
+			<div className="h-10 w-10 animate-spin rounded-full border-4 border-slate-700 border-t-blue-500"></div>
+		</div>
+	);
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -378,7 +384,6 @@ export default function Positions() {
 						<p className="text-red-400">{error}</p>
 					</div>
 				)}
-
 				{invalidAddress && (
 					<div className="bg-red-500/10 border border-red-500/50 rounded-xl p-4 mb-6">
 						<p className="text-red-400">
@@ -1076,6 +1081,8 @@ export default function Positions() {
 							</div>
 						)}
 					</div>
+				) : loading ? (
+					<Spinner />
 				) : (
 					!invalidAddress && (
 						<div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-12 text-center">

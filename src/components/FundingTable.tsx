@@ -82,13 +82,20 @@ export default function FundingTable({
 			handleFetch();
 		}
 	}, [address, page]);
+	const Spinner = () => (
+		<div className="flex justify-center items-center py-10">
+			<div className="h-10 w-10 animate-spin rounded-full border-4 border-slate-700 border-t-blue-500"></div>
+		</div>
+	);
 	return (
 		<>
 			<section className="mb-10">
 				<h2 className="text-xl font-semibold mt-10 mb-3 text-blue-400">
 					{title}
 				</h2>
-				{data.length === 0 ? (
+				{loading ? (
+					<Spinner />
+				) : data.length === 0 ? (
 					<p className="text-gray-500">
 						No funding data found or error fetching Hyperliquid funding.
 					</p>
