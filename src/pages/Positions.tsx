@@ -20,6 +20,9 @@ import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import useFetchTradeDetails from "../hooks/useFetchTradeDetails";
 import useFetchCurrentBalance from "../hooks/useFetchCurrentBalance";
+import useFetchCurrentPrice from "../hooks/useFetchCurrentPrice";
+import useFetchLighterMarkets from "../hooks/useFetchLighterMarkets";
+import useFetchLighterCurrentPrice from "../hooks/useFetchLighterCurrentPrice";
 
 type TabType = "positions" | "funding" | "summary" | "trades" | "allFunding";
 
@@ -285,7 +288,22 @@ export default function Positions() {
 	);
 	const { data: currentBalanceData, isLoading: currentBalanceLoading } =
 		useFetchCurrentBalance(address);
-
+	const { data: currentPriceData, isLoading: currentPriceLoading } =
+		useFetchCurrentPrice(hlPositions.length > 0 || ltPositions.length > 0);
+	const { data: lighterMarkets, isLoading: lighterMarketsLoading } =
+		useFetchLighterMarkets(true);
+	const [lighterMarketId, setLighterMarketId] = useState<string | null>(null);
+	useEffect(() => {
+		if (ltPositions.length > 0) {
+			const position = ltPositions.filter((p) => Number(p.position) !== 0);
+			setLighterMarketId(position[0].market_id);
+		}
+	}, [ltPositions]);
+	const { data: lighterMarketData, isLoading: lighterMarketDataLoading } =
+		useFetchLighterCurrentPrice(
+			Number(lighterMarketId),
+			lighterMarketId !== null
+		);
 	const Spinner = () => (
 		<div className="flex justify-center items-center py-10">
 			<div className="h-10 w-10 animate-spin rounded-full border-4 border-slate-700 border-t-blue-500"></div>
@@ -564,6 +582,9 @@ export default function Positions() {
 														</th>
 														<th className="px-4 py-3 font-medium">Size</th>
 														<th className="px-4 py-3 font-medium">Value</th>
+														<th className="px-4 py-3 font-medium">
+															Current Price{" "}
+														</th>
 														{/* <th className="px-4 py-3 font-medium">ROE</th> */}
 														<th className="px-4 py-3 font-medium">
 															Unrealized PnL
@@ -607,20 +628,22 @@ export default function Positions() {
 																<td className="px-4 py-3">
 																	{p.position.positionValue}
 																</td>
-																{/* <td className="px-4 py-3">
+																<td className="px-4 py-3">
 																	<span
 																		className={
-																			Number(p.position.returnOnEquity) >= 0
+																			Number(
+																				currentPriceData[p.position.coin]
+																			) >= 0
 																				? "text-green-400"
 																				: "text-red-400"
 																		}
 																	>
-																		{(
-																			Number(p.position.returnOnEquity) * 100
-																		).toFixed(2)}
-																		%
+																		$
+																		{Number(
+																			currentPriceData[p.position.coin]
+																		).toFixed(6)}{" "}
 																	</span>
-																</td> */}
+																</td>
 																<td className="px-4 py-3">
 																	<span
 																		className={
@@ -649,50 +672,7 @@ export default function Positions() {
 										</div>
 									)}
 								</div>
-								{/* <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 overflow-hidden">
-									<div className="p-6 border-b border-slate-700/50">
-										<h3 className="text-xl font-bold text-purple-400">
-											Spot Hyperliquid Positions
-										</h3>
-									</div>
-									{hlSpotPositions.length === 0 ? (
-										<div className="p-6 text-center text-slate-400">
-											No active Spot Hyperliquid positions found.
-										</div>
-									) : (
-										<div className="overflow-x-auto">
-											<table className="w-full">
-												<thead className="bg-slate-900/50">
-													<tr className="text-left text-slate-400 text-sm">
-														<th className="px-4 py-3 font-medium">Symbol</th>
-														<th className="px-4 py-3 font-medium">Token ID</th>
-														<th className="px-4 py-3 font-medium">Quantity</th>
-														<th className="px-4 py-3 font-medium">Hold</th>
-														<th className="px-4 py-3 font-medium">Entry NTL</th>
-													</tr>
-												</thead>
-												<tbody className="text-slate-200">
-													{hlSpotPositions.map((p, i) => (
-														<tr
-															key={i}
-															className="border-t border-slate-700/50 hover:bg-slate-700/30"
-														>
-															<td className="px-4 py-3 font-medium">
-																{p.coin}
-															</td>
-															<td className="px-4 py-3">{p.token}</td>
-															<td className="px-4 py-3">{p.total}</td>
-															<td className="px-4 py-3">{p.hold}</td>
-															<td className="px-4 py-3">
-																{Number(p.entryNtl).toFixed(2)}
-															</td>
-														</tr>
-													))}
-												</tbody>
-											</table>
-										</div>
-									)}
-								</div> */}
+
 								<div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 overflow-hidden">
 									<div className="p-6 border-b border-slate-700/50">
 										<h3 className="text-xl font-bold text-purple-400">
@@ -716,6 +696,10 @@ export default function Positions() {
 														</th>
 														<th className="px-4 py-3 font-medium">Size</th>
 														<th className="px-4 py-3 font-medium">Value</th>
+														<th className="px-4 py-3 font-medium">
+															Current Price{" "}
+														</th>
+														{/* <th className="px-4 py-3 font-medium">ROE</th> */}
 														<th className="px-4 py-3 font-medium">
 															Unrealized PnL
 														</th>
@@ -755,6 +739,24 @@ export default function Positions() {
 																<td className="px-4 py-3">{p.position}</td>
 																<td className="px-4 py-3">
 																	{p.position_value}
+																</td>
+																<td className="px-4 py-3">
+																	<span
+																		className={
+																			Number(
+																				lighterMarketData.order_book_details[0]
+																					.last_trade_price
+																			) >= 0
+																				? "text-green-400"
+																				: "text-red-400"
+																		}
+																	>
+																		$
+																		{Number(
+																			lighterMarketData.order_book_details[0]
+																				.last_trade_price
+																		).toFixed(6)}{" "}
+																	</span>
 																</td>
 																<td className="px-4 py-3">
 																	<span
