@@ -57,18 +57,29 @@ export default function Positions() {
 		setMarketFees([]);
 		setHlTrades([]);
 		setLtTrades([]);
+
+		// Initialize default pnlData structure in case API fails
+		const defaultPnlData = {
+			data: {
+				hyperliquid: {
+					total_deposits: 0,
+					pnl: 0,
+					pnl_percent: 0,
+					apr: 0,
+				},
+				lighter: {
+					total_deposits: 0,
+					pnl: 0,
+					pnl_percent: 0,
+					apr: 0,
+				},
+				total_apy: 0,
+				total_pnl_percent: 0,
+			},
+		};
+
 		try {
-			const [
-				hl,
-				hlSpot,
-				lt,
-				pnlData,
-				tokenFunding,
-				marketFees,
-				hlTradesData,
-				ltTradesData,
-				fundingRate,
-			] = await Promise.all([
+			const results = await Promise.allSettled([
 				fetchHyperliquidUserPositions(address),
 				spotFetchHyperliquidUserPositions(address),
 				fetchLighterUserPositions(address),
@@ -113,19 +124,51 @@ export default function Positions() {
 				),
 				fetchLighterFundingRate(),
 			]);
+
+			// Handle each result individually, using defaults if failed
+			const hl = results[0].status === "fulfilled" ? results[0].value : [];
+			const hlSpot = results[1].status === "fulfilled" ? results[1].value : [];
+			const lt = results[2].status === "fulfilled" ? results[2].value : [];
+			const pnlDataResult =
+				results[3].status === "fulfilled" ? results[3].value : defaultPnlData;
+			const tokenFunding =
+				results[4].status === "fulfilled"
+					? results[4].value
+					: {
+							data: {
+								hyperliquid_token_wise: [],
+								lighter_token_wise: [],
+								overall_funding: null,
+							},
+					  };
+			const marketFees =
+				results[5].status === "fulfilled"
+					? results[5].value
+					: { data: { hl_fees: [] } };
+			const hlTradesData =
+				results[6].status === "fulfilled" ? results[6].value : { data: [] };
+			const ltTradesData =
+				results[7].status === "fulfilled" ? results[7].value : { data: [] };
+			const fundingRate =
+				results[8].status === "fulfilled"
+					? results[8].value
+					: { funding_rates: [] };
+
 			setHlPositions(hl);
 			setHlSpotPositions(hlSpot);
 			setLtPositions(lt);
-			setTokenFundingHl(tokenFunding.data.hyperliquid_token_wise || []);
-			setTokenFundingLighter(tokenFunding.data.lighter_token_wise || []);
-			setOverallFundingDetails(tokenFunding.data.overall_funding || null);
-			setMarketFees(marketFees.data.hl_fees || []);
+			setTokenFundingHl(tokenFunding.data?.hyperliquid_token_wise || []);
+			setTokenFundingLighter(tokenFunding.data?.lighter_token_wise || []);
+			setOverallFundingDetails(tokenFunding.data?.overall_funding || null);
+			setMarketFees(marketFees.data?.hl_fees || []);
 			setHlTrades(hlTradesData.data || []);
 			setLtTrades(ltTradesData.data || []);
-			setPnlData(pnlData);
-			setFundingRate(fundingRate.funding_rates);
+			setPnlData(pnlDataResult);
+			setFundingRate(fundingRate.funding_rates || []);
 		} catch (e: any) {
-			setError(e.message || "Error fetching positions");
+			// Set default pnlData if there's a general error
+			setPnlData(defaultPnlData);
+			console.error("Error fetching positions:", e);
 		} finally {
 			setLoading(false);
 		}
@@ -303,6 +346,13 @@ export default function Positions() {
 			Number(lighterMarketId),
 			lighterMarketId !== null
 		);
+
+	// Compute loading state for summary tab - wait for all summary-related data
+	const isSummaryLoading =
+		activeTab === "summary" &&
+		address !== "" &&
+		(loading || tradeLoading || currentBalanceLoading);
+
 	const Spinner = () => (
 		<div className="flex justify-center items-center py-10">
 			<div className="h-10 w-10 animate-spin rounded-full border-4 border-slate-700 border-t-blue-500"></div>
@@ -409,9 +459,10 @@ export default function Positions() {
 					</div>
 				)}
 
-				{!invalidAddress && pnlData ? (
+				{!invalidAddress ? (
 					<div className="space-y-6">
-						{activeTab === "summary" && (
+						{activeTab === "summary" && isSummaryLoading && <Spinner />}
+						{activeTab === "summary" && !isSummaryLoading && (
 							<div className="space-y-6">
 								<div className="grid grid-cols-1 md:grid-cols-4 gap-6">
 									<div className="bg-gradient-to-br from-blue-500/20 to-purple-500/20 backdrop-blur-sm rounded-2xl border border-blue-500/30 p-6">
@@ -421,21 +472,22 @@ export default function Positions() {
 										<div className="text-3xl font-bold text-white">
 											$
 											{Number(
-												Number(pnlData.data.hyperliquid.total_deposits) +
-													Number(pnlData.data.lighter.total_deposits)
+												Number(
+													pnlData?.data?.hyperliquid?.total_deposits || 0
+												) + Number(pnlData?.data?.lighter?.total_deposits || 0)
 											).toFixed(2)}
 										</div>
 									</div>
 									{/* <div className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 backdrop-blur-sm rounded-2xl border border-green-500/30 p-6">
 										<div className="text-sm text-green-300 mb-2">Total PNL</div>
 										<div className="text-3xl font-bold text-white">
-											{Number(pnlData.data.total_pnl_percent).toFixed(2)}%
+											{Number(pnlData?.data?.total_pnl_percent || 0).toFixed(2)}%
 										</div>
 									</div> */}
 									<div className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 backdrop-blur-sm rounded-2xl border border-green-500/30 p-6">
 										<div className="text-sm text-green-300 mb-2">APR</div>
 										<div className="text-3xl font-bold text-white">
-											{Number(pnlData.data.total_apy).toFixed(2)}%
+											{Number(pnlData?.data?.total_apy || 0).toFixed(2)}%
 										</div>
 									</div>
 									<div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-2xl border border-purple-500/30 p-6">
@@ -443,7 +495,10 @@ export default function Positions() {
 											Total Funding Earned
 										</div>
 										<div className="text-3xl font-bold text-white">
-											${Number(tradeData?.data.total_funding_earned).toFixed(2)}
+											$
+											{Number(
+												tradeData?.data?.total_funding_earned || 0
+											).toFixed(2)}
 										</div>
 									</div>
 									<div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-2xl border border-purple-500/30 p-6">
@@ -451,7 +506,8 @@ export default function Positions() {
 											Total Fees Paid
 										</div>
 										<div className="text-3xl font-bold text-white">
-											${Number(tradeData?.data.total_fees_paid).toFixed(2)}
+											$
+											{Number(tradeData?.data?.total_fees_paid || 0).toFixed(2)}
 										</div>
 									</div>
 								</div>
@@ -467,7 +523,7 @@ export default function Positions() {
 												<span className="text-white font-semibold">
 													$
 													{Number(
-														pnlData.data.hyperliquid.total_deposits
+														pnlData?.data?.hyperliquid?.total_deposits || 0
 													).toFixed(2)}
 												</span>
 											</div>
@@ -476,7 +532,9 @@ export default function Positions() {
 												<span className="text-white font-semibold">
 													$
 													{Number(
-														!currentBalanceLoading
+														!currentBalanceLoading &&
+															currentBalanceData?.data?.hyperliquid
+																?.account_balance
 															? currentBalanceData.data.hyperliquid
 																	.account_balance
 															: 0
@@ -486,13 +544,13 @@ export default function Positions() {
 											{/* <div className="flex justify-between">
 												<span className="text-slate-400">PNL</span>
 												<span className="text-green-400 font-semibold">
-													${Number(pnlData.data.hyperliquid.pnl).toFixed(2)}
+													${Number(pnlData?.data?.hyperliquid?.pnl || 0).toFixed(2)}
 												</span>
 											</div>
 											<div className="flex justify-between">
 												<span className="text-slate-400">PNL %</span>
 												<span className="text-green-400 font-semibold">
-													{Number(pnlData.data.hyperliquid.pnl_percent).toFixed(
+													{Number(pnlData?.data?.hyperliquid?.pnl_percent || 0).toFixed(
 														2
 													)}
 													%
@@ -501,7 +559,7 @@ export default function Positions() {
 											{/* <div className="flex justify-between">
 												<span className="text-slate-400">APR</span>
 												<span className="text-purple-400 font-semibold">
-													{Number(pnlData.data.hyperliquid.apr).toFixed(2)}%
+													{Number(pnlData?.data?.hyperliquid?.apr || 0).toFixed(2)}%
 												</span>
 											</div> */}
 										</div>
@@ -516,9 +574,9 @@ export default function Positions() {
 												<span className="text-slate-400">Total Deposit</span>
 												<span className="text-white font-semibold">
 													$
-													{Number(pnlData.data.lighter.total_deposits).toFixed(
-														2
-													)}
+													{Number(
+														pnlData?.data?.lighter?.total_deposits || 0
+													).toFixed(2)}
 												</span>
 											</div>
 											<div className="flex justify-between">
@@ -526,7 +584,8 @@ export default function Positions() {
 												<span className="text-white font-semibold">
 													$
 													{Number(
-														!currentBalanceLoading
+														!currentBalanceLoading &&
+															currentBalanceData?.data?.lighter?.account_balance
 															? currentBalanceData.data.lighter.account_balance
 															: 0
 													).toFixed(2)}
@@ -535,19 +594,19 @@ export default function Positions() {
 											{/* <div className="flex justify-between">
 												<span className="text-slate-400">PNL</span>
 												<span className="text-green-400 font-semibold">
-													${Number(pnlData.data.lighter.pnl).toFixed(2)}
+													${Number(pnlData?.data?.lighter?.pnl || 0).toFixed(2)}
 												</span>
 											</div>
 											<div className="flex justify-between">
 												<span className="text-slate-400">PNL %</span>
 												<span className="text-green-400 font-semibold">
-													{Number(pnlData.data.lighter.pnl_percent).toFixed(2)}%
+													{Number(pnlData?.data?.lighter?.pnl_percent || 0).toFixed(2)}%
 												</span>
 											</div> */}
 											{/* <div className="flex justify-between">
 												<span className="text-slate-400">APR</span>
 												<span className="text-purple-400 font-semibold">
-													{Number(pnlData.data.lighter.apr).toFixed(2)}%
+													{Number(pnlData?.data?.lighter?.apr || 0).toFixed(2)}%
 												</span>
 											</div> */}
 										</div>
