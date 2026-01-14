@@ -290,12 +290,11 @@ export default function Positions() {
 		useFetchCurrentBalance(address);
 	const { data: currentPriceData, isLoading: currentPriceLoading } =
 		useFetchCurrentPrice(hlPositions.length > 0 || ltPositions.length > 0);
-	const { data: lighterMarkets, isLoading: lighterMarketsLoading } =
-		useFetchLighterMarkets(true);
 	const [lighterMarketId, setLighterMarketId] = useState<string | null>(null);
 	useEffect(() => {
 		if (ltPositions.length > 0) {
 			const position = ltPositions.filter((p) => Number(p.position) !== 0);
+			if (position.length === 0) return;
 			setLighterMarketId(position[0].market_id);
 		}
 	}, [ltPositions]);
