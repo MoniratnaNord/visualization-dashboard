@@ -689,6 +689,7 @@ export default function Positions() {
 																<td className="px-4 py-3">
 																	<span
 																		className={
+																			!currentPriceLoading &&
 																			Number(
 																				currentPriceData[p.position.coin]
 																			) >= 0
@@ -698,7 +699,8 @@ export default function Positions() {
 																	>
 																		$
 																		{Number(
-																			currentPriceData[p.position.coin]
+																			!currentPriceLoading &&
+																				currentPriceData[p.position.coin]
 																		).toFixed(6)}{" "}
 																	</span>
 																</td>
@@ -801,6 +803,8 @@ export default function Positions() {
 																<td className="px-4 py-3">
 																	<span
 																		className={
+																			!lighterMarketDataLoading &&
+																			lighterMarketData &&
 																			Number(
 																				lighterMarketData.order_book_details[0]
 																					.last_trade_price
@@ -810,10 +814,12 @@ export default function Positions() {
 																		}
 																	>
 																		$
-																		{Number(
-																			lighterMarketData.order_book_details[0]
-																				.last_trade_price
-																		).toFixed(6)}{" "}
+																		{!lighterMarketDataLoading &&
+																			lighterMarketData &&
+																			Number(
+																				lighterMarketData.order_book_details[0]
+																					.last_trade_price
+																			).toFixed(6)}{" "}
 																	</span>
 																</td>
 																<td className="px-4 py-3">
